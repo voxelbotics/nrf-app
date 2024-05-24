@@ -10,6 +10,7 @@ project(imd-nrf)
 # NORDIC SDK APP START
 target_sources(app PRIVATE
 	src/main.c
+	src/usb_uart.c
 )
 # NORDIC SDK APP END
 
