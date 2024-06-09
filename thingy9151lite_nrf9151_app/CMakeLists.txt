@@ -13,6 +13,7 @@ target_sources(app PRIVATE
 	src/main.c
 	src/lis2dw12.c
 	src/lis2dw12_shell.c
+	src/lps22hb_shell.c
 	src/lps22hh_shell.c
 )
 # NORDIC SDK APP END
