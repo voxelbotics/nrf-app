@@ -18,6 +18,7 @@
 	lps22hb-press@5c {
 		compatible = "st,lps22hb-press";
 		reg = <0x5c>;
+		drdy-gpios = <&arduino_header 10 GPIO_ACTIVE_HIGH>;
 	};
 
 };

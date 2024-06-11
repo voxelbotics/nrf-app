@@ -10,7 +10,7 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/sensor.h>
 #include <ctype.h>
-#include "lps22hh_shell.h"
+#include "lps22hb_shell.h"
 
 static inline float out_ev(struct sensor_value *val)
 {
@@ -48,6 +48,8 @@ static int cmd_lps22hb_get(const struct shell *sh, size_t argc, char **argv)
 	/* display temperature */
 	shell_print(sh, "Temperature: %.2f C\n", sensor_value_to_double(&temp));
 
+	/* trigger count */
+	shell_print(sh, "Trigger count: %d\n", lps22hb_trig_cnt);
 	return 0;
 }
 
@@ -81,6 +83,18 @@ static int cmd_lps22hb_set(const struct shell *sh, size_t argc, char **argv)
 	if (ret != 0) {
 		shell_print(sh, "Cannot configure sampling rate.\n");
 		return ret;
+	}
+
+	if (IS_ENABLED(CONFIG_LPS22HB_TRIGGER)) {
+		struct sensor_trigger trig = {
+			.type = SENSOR_TRIG_DATA_READY,
+			.chan = SENSOR_CHAN_ALL,
+		};
+
+		if (sensor_trigger_set(dev, &trig, lps22hb_handler) < 0) {
+			shell_print(sh, "Cannot configure trigger\n");
+			return 0;
+		}
 	}
 
 	return 0;
