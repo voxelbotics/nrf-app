@@ -6,6 +6,7 @@
 	chosen {
 		zephyr,console = &cdc_acm_uart0;
 		zephyr,shell-uart = &cdc_acm_uart0;
+		zephyr,ppp-uart = &uart0;
 	};
 };
 
@@ -13,4 +14,9 @@
 	cdc_acm_uart0: cdc_acm_uart0 {
 		compatible = "zephyr,cdc-acm-uart";
 	};
+};
+
+&uart0 {
+	status = "okay";
+	hw-flow-control;
 };

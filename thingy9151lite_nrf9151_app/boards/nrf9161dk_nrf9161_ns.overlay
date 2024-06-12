@@ -2,6 +2,17 @@
  * Copyright (c) 2024 VoxelBotics
  */
 
+/ {
+	chosen {
+		zephyr,ppp-uart = &uart1;
+	};
+};
+
+&uart1 {
+	status = "okay";
+	hw-flow-control;
+};
+
 &arduino_i2c {
 	lis2dw12: lis2dw12@19 {
 		compatible = "st,lis2dw12";
