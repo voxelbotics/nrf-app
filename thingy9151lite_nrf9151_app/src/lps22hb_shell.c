@@ -10,7 +10,7 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/sensor.h>
 #include <ctype.h>
-#include "lps22hh_shell.h"
+#include "lps22hb_shell.h"
 
 static inline float out_ev(struct sensor_value *val)
 {
@@ -48,6 +48,8 @@ static int cmd_lps22hb_get(const struct shell *sh, size_t argc, char **argv)
 	/* display temperature */
 	shell_print(sh, "Temperature: %.2f C\n", sensor_value_to_double(&temp));
 
+	/* trigger count */
+	shell_print(sh, "Trigger count: %d\n", lps22hb_trig_cnt);
 	return 0;
 }
 
@@ -83,6 +85,18 @@ static int cmd_lps22hb_set(const struct shell *sh, size_t argc, char **argv)
 		return ret;
 	}
 
+	if (IS_ENABLED(CONFIG_LPS22HB_TRIGGER)) {
+		struct sensor_trigger trig = {
+			.type = SENSOR_TRIG_DATA_READY,
+			.chan = SENSOR_CHAN_ALL,
+		};
+
+		if (sensor_trigger_set(dev, &trig, lps22hb_handler) < 0) {
+			shell_print(sh, "Cannot configure trigger\n");
+			return 0;
+		}
+	}
+
 	return 0;
 }
 
@@ -101,14 +115,13 @@ static int cmd_lps22hb_pm_set(const struct shell *sh, size_t argc, char **argv)
 		return 0;
 	}
 
-	if (strncmp(argv[2], "ln", 2) == 0) {
+	if (strncmp(argv[1], "ln", 2) == 0) {
 		mode = 1;
 		shell_print(sh, "Setting low-noise mode.\n");
 	} else {
 		shell_print(sh, "Setting low-current mode.\n");
 	}
 
-	
 	attr.val1 = mode;
 	attr.val2 = 0;
 
@@ -126,8 +139,8 @@ static int cmd_lps22hb_pm_set(const struct shell *sh, size_t argc, char **argv)
 SHELL_CMD_REGISTER(lps22hb_get, NULL, "Print LPS22HB data",
 		cmd_lps22hb_get);
 
-SHELL_CMD_REGISTER(lps22hb_set, NULL, "Set LPS22HB sampling frequency (1..200)",
+SHELL_CMD_REGISTER(lps22hb_set, NULL, "Set LPS22HB sampling frequency (0, 1, 10, 25, 50, 75)",
 		cmd_lps22hb_set);
 
-SHELL_CMD_REGISTER(lps22hh_pm, NULL, "Set LPS22HB power mode (lc - low current, ln - low noise)",
+SHELL_CMD_REGISTER(lps22hb_pm, NULL, "Set LPS22HB power mode (lc - low current, ln - low noise)",
 		cmd_lps22hb_pm_set);
