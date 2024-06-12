@@ -1,0 +1,33 @@
+#
+# Copyright (c) 2024 VoxelBotics
+#
+
+menu "Thingy-9151-Lite nRF9151 application"
+
+config APP_VERSION
+	string "Application version"
+	default "0.0.0"
+
+config APP_BUILD_NUMBER
+	int "Applicationpplication build number"
+	default 1
+
+config VERSION_MAX_LEN
+	int "Maximum length of the application firmware version"
+	default 8
+
+config APP_DEBUG
+	bool "Application debug enable"
+	default n
+
+rsource "src/watchdog/Kconfig"
+
+endmenu
+
+menu "Zephyr Kernel"
+source "Kconfig.zephyr"
+endmenu
+
+module = APP
+module-str = APP
+source "subsys/logging/Kconfig.template.log_config"

@@ -32,4 +32,13 @@
 		drdy-gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
 	};
 
+	npm1300_pmic: pmic@6b {
+		compatible = "nordic,npm1300";
+		reg = <0x6b>;
+		status = "okay";
+
+		npm1300_wdt: npm1300_wdt {
+			compatible = "nordic,npm1300-wdt";
+		};
+	};
 };

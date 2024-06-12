@@ -20,5 +20,7 @@ target_sources(app PRIVATE
 )
 # NORDIC SDK APP END
 
+add_subdirectory_ifdef(CONFIG_WDT_CONTROL src/watchdog)
+
 # Include source directory
 target_include_directories(app PRIVATE src)

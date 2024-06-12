@@ -1,0 +1,33 @@
+#
+# Copyright (c) 2024 VoxelBotics
+#
+
+menuconfig WDT_CONTROL
+	bool "Enable watchdog control"
+	select WATCHDOG
+	default y
+
+if WDT_CONTROL
+
+config WDT_CONTROL_USE_NPM1300_WDT
+	bool "Use nPM1300 watchdog"
+	default n
+
+config WDT_CONTROL_USE_INTERNAL_WDT
+	bool "Use internal watchdog"
+	depends on !WDT_CONTROL_USE_NPM1300_WDT
+	default y if !WDT_CONTROL_USE_NPM1300_WDT
+
+config WDT_CONTROL_TIMEOUT_MS
+	int "Watchdog timeout in milliseconds"
+	default 1000
+
+config WDT_CONTROL_FEED_PERIOD_MS
+	int "Watchdog feed period in milliseconds"
+	default 500
+
+endif # WDT_CONTROL
+
+module = WDT_CONTROL
+module-str = wdt-control
+source "subsys/logging/Kconfig.template.log_config"

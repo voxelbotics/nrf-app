@@ -6,6 +6,9 @@
 #include <zephyr/logging/log.h>
 #include "config.h"
 #include "lps22hb_shell.h"
+#if CONFIG_WDT_CONTROL
+#include "wdt_control.h"
+#endif
 
 LOG_MODULE_REGISTER(app);
 
@@ -17,6 +20,10 @@ int main(void)
 		CONFIG_BUILD_NUMBER,
 		CONFIG_BUILD_DEBUG ? "debug" : "release",
 		CONFIG_BOARD);
+
+#if CONFIG_WDT_CONTROL
+	wdt_control_init();
+#endif
 
 	if (IS_ENABLED(CONFIG_LPS22HB_TRIGGER)) {
 		const struct device *const dev = DEVICE_DT_GET_ONE(st_lps22hb_press);
@@ -36,5 +43,6 @@ int main(void)
 
 		sensor_attr_set(dev, SENSOR_CHAN_ALL, SENSOR_ATTR_SAMPLING_FREQUENCY, &attr);
 	}
+
 	return 0;
 }
