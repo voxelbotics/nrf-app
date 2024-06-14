@@ -49,10 +49,17 @@ int main(void)
 			.type = SENSOR_TRIG_DATA_READY,
 			.chan = SENSOR_CHAN_ACCEL_XYZ,
 		};
-		
+		struct sensor_value pm_attr = {
+			.val1 = CONFIGURE_PM_MODE,
+			.val2 = LIS2DW12_HIGH_PERFORMANCE,
+		};
+
 		LOG_DBG("Setting up handler for LIS2DW12");
 		
-		lis2dw12_set_power_mode(dev, LIS2DW12_HIGH_PERFORMANCE);
+		if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
+			    SENSOR_ATTR_CONFIGURATION, &pm_attr) < 0) {
+			LOG_ERR("Cannot set power mode for LIS2DW12 gyro\n");
+		}
 
 		sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			SENSOR_ATTR_SAMPLING_FREQUENCY, &odr_attr);
