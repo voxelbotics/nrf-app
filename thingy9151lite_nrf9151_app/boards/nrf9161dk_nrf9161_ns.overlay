@@ -4,7 +4,11 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
-/	{
+/ {
+	chosen {
+		zephyr,ppp-uart = &uart1;
+	};
+
 	/delete-node/ leds;
 
 	leds0 {
@@ -60,4 +64,30 @@
 
 &gd25wb256 {
 	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+	hw-flow-control;
+};
+
+&arduino_i2c {
+	lis2dw12: lis2dw12@19 {
+		compatible = "st,lis2dw12";
+		reg = <0x19>;
+		int-pin = <1>;
+		irq-gpios =  <&gpio0 7 GPIO_ACTIVE_HIGH>, <&gpio0 4 GPIO_ACTIVE_HIGH>;
+	};
+
+	lps22hh@5d {
+		compatible = "st,lps22hh";
+		reg = <0x5d>;
+		drdy-gpios = <&arduino_header 15 GPIO_ACTIVE_HIGH>;
+	};
+
+	lps22hb-press@5c {
+		compatible = "st,lps22hb-press";
+		reg = <0x5c>;
+		drdy-gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
+	};
 };
