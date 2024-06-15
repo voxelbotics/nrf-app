@@ -68,7 +68,9 @@
 
 &uart1 {
 	status = "okay";
+#if 0 /* TBD - the app hangs with hw-flow-control enabled */
 	hw-flow-control;
+#endif
 };
 
 &arduino_i2c {
