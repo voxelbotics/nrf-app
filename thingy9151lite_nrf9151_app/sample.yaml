@@ -8,6 +8,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
       - native_sim
@@ -35,6 +36,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -62,6 +64,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -89,6 +92,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
       - native_sim
@@ -122,6 +126,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -153,6 +158,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -188,6 +194,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
       - native_sim
@@ -223,6 +230,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
       - native_sim
@@ -252,6 +260,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -283,6 +292,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -314,6 +324,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -374,6 +385,14 @@ tests:
       - nrf9151dk_nrf9151_ns
     extra_args: EXTRA_CONF_FILE=overlay-carrier.conf
     tags: ci_build
+  applications.asset_tracker_v2.carrier.thingy9151lite:
+    build_only: true
+    build_on_all: true
+    platform_allow: thingy9151lite_nrf9161_ns
+    integration_platforms:
+      - thingy9151lite_nrf9161_ns
+    extra_args: EXTRA_CONF_FILE=overlay-carrier.conf
+    tags: ci_build
   applications.asset_tracker_v2.lwm2m.bootstrap-low_power:
     build_only: true
     build_on_all: true
@@ -381,6 +400,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -410,6 +430,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -437,6 +458,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
     integration_platforms:
       - nrf9160dk_nrf9160_ns
     extra_args:
@@ -462,6 +484,7 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
@@ -493,12 +516,14 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
     extra_configs:
       - CONFIG_MEMFAULT_NCS_PROJECT_KEY="PROJECTKEY"
@@ -526,12 +551,14 @@ tests:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
       - thingy91x_nrf9151_ns
     integration_platforms:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
       - thingy91_nrf9160_ns
     extra_configs:
       - CONFIG_MEMFAULT_NCS_PROJECT_KEY="PROJECTKEY"
@@ -581,16 +608,25 @@ tests:
     platform_allow: nrf9151dk_nrf9151_ns
     extra_args: SHIELD=nrf7002ek EXTRA_CONF_FILE=overlay-nrf7002ek-wifi-scan-only.conf
     tags: ci_build
+  applications.asset_tracker_v2.nrf7002ek_wifi.thingy9151lite:
+    build_only: true
+    integration_platforms:
+      - thingy9151lite_nrf9161_ns
+    platform_allow: thingy9151lite_nrf9161_ns
+    extra_args: SHIELD=nrf7002ek EXTRA_CONF_FILE=overlay-nrf7002ek-wifi-scan-only.conf
+    tags: ci_build
   applications.asset_tracker_v2.nrf7002ek_wifi-debug:
     build_only: true
     integration_platforms:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
     platform_allow:
       - nrf9160dk_nrf9160_ns
       - nrf9161dk_nrf9161_ns
       - nrf9151dk_nrf9151_ns
+      - thingy9151lite_nrf9161_ns
     extra_args: SHIELD=nrf7002ek
                 EXTRA_CONF_FILE="overlay-nrf7002ek-wifi-scan-only.conf;overlay-debug.conf"
     tags: ci_build

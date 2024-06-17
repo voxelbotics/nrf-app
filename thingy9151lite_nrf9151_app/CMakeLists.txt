@@ -6,6 +6,7 @@
 
 cmake_minimum_required(VERSION 3.20.0)
 
+list(APPEND BOARD_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(asset_tracker_v2)
 zephyr_compile_definitions(PROJECT_NAME=${PROJECT_NAME})
