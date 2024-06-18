@@ -48,7 +48,9 @@ static int cmd_lps22hh_get(const struct shell *sh, size_t argc, char **argv)
 	/* display temperature */
 	shell_print(sh, "Temperature: %.2f C\n", sensor_value_to_double(&temp));
 
+#ifdef CONFIG_LPS22HH_TRIGGER
 	shell_print(sh, "Trigger count: %d\n", lps22hh_trig_cnt);
+#endif
 	return 0;
 }
 

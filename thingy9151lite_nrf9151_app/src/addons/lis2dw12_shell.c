@@ -1,5 +1,5 @@
 /*
- * Miscellaneous shell commands
+ * LIS2DW12 shell commands
  *
  * Copyright (c) 2024 Emcraft Systems
  *
@@ -132,11 +132,12 @@ static int cmd_lis2dw12_pm_set(const struct shell *sh, size_t argc, char **argv)
 	shell_print(sh, "Setting power mode %d", pm);
 	attr.val1 = CONFIGURE_PM_MODE;
 	attr.val2 = pm;
+	
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			    SENSOR_ATTR_CONFIGURATION, &attr) < 0) {
 		shell_print(sh, "Cannot set power mode for LIS2DW12 gyro\n");
-		return 0;
 	}
+
 	return 0;
 } 
 
@@ -166,7 +167,7 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 		shell_print(sh, "Cannot set pin for LIS2DW12 gyro\n");
 	}
 
-	// reset counter
+	/* reset counter */
 	lis2dw12_trig_cnt = 0;
 
 #ifdef CONFIG_LIS2DW12_TRIGGER
