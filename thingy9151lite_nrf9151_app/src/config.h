@@ -2,8 +2,8 @@
  * Copyright (c) 2024 VoxelBotics
  */
 
-#ifndef CB24FW_CONFIG_H_
-#define CB24FW_CONFIG_H_
+#ifndef THINGY9151LITE_CONFIG_H_
+#define THINGY9151LITE_CONFIG_H_
 
 /* The software version: major / minor / build number */
 #define CONFIG_VERSION_MAJOR    1
