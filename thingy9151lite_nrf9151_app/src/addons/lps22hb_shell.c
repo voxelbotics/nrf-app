@@ -12,11 +12,6 @@
 #include <ctype.h>
 #include "lps22hb_shell.h"
 
-static inline float out_ev(struct sensor_value *val)
-{
-	return (val->val1 + (float)val->val2 / 1000000);
-}
-
 static int cmd_lps22hb_get(const struct shell *sh, size_t argc, char **argv)
 {
 	struct sensor_value pressure, temp;
@@ -48,8 +43,11 @@ static int cmd_lps22hb_get(const struct shell *sh, size_t argc, char **argv)
 	/* display temperature */
 	shell_print(sh, "Temperature: %.2f C\n", sensor_value_to_double(&temp));
 
+#ifdef CONFIG_LPS22HB_TRIGGER
 	/* trigger count */
 	shell_print(sh, "Trigger count: %d\n", lps22hb_trig_cnt);
+#endif
+
 	return 0;
 }
 
@@ -75,7 +73,7 @@ static int cmd_lps22hb_set(const struct shell *sh, size_t argc, char **argv)
 	attr.val1 = strtol(argv[1], NULL, 10);	
 	attr.val2 = 0;
 
-	shell_print(sh, "Setting sampling rate to %f Hz\n", out_ev(&attr));
+	shell_print(sh, "Setting sampling rate to %u Hz\n", attr.val1);
 
 	ret = sensor_attr_set(dev, SENSOR_CHAN_ALL,
 			SENSOR_ATTR_SAMPLING_FREQUENCY, &attr);
