@@ -1,5 +1,5 @@
 /*
- * Miscellaneous shell commands
+ * LIS2DW12 shell commands
  *
  * Copyright (c) 2024 Emcraft Systems
  *
@@ -132,11 +132,12 @@ static int cmd_lis2dw12_pm_set(const struct shell *sh, size_t argc, char **argv)
 	shell_print(sh, "Setting power mode %d", pm);
 	attr.val1 = CONFIGURE_PM_MODE;
 	attr.val2 = pm;
+	
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			    SENSOR_ATTR_CONFIGURATION, &attr) < 0) {
 		shell_print(sh, "Cannot set power mode for LIS2DW12 gyro\n");
-		return 0;
 	}
+
 	return 0;
 } 
 
@@ -145,7 +146,11 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 {
 	const struct device *const dev = DEVICE_DT_GET_ONE(st_lis2dw12);
 	int pin;
-	struct sensor_value attr;
+	struct sensor_value attr, fs_attr;
+	struct sensor_value odr_attr = {
+			.val1 = 12,
+			.val2 = 500000,
+		};
 
 	if (argc < 2) {
 		shell_print(sh, "Example: lis2dw12_pin 1 - set pin #1");
@@ -159,14 +164,26 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 	pin = atoi(argv[1]);
 
 	shell_print(sh, "Setting pin #%d", pin);
+	
 	attr.val1 = CONFIGURE_INT_PIN;
 	attr.val2 = pin;
+
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			    SENSOR_ATTR_CONFIGURATION, &attr) < 0) {
 		shell_print(sh, "Cannot set pin for LIS2DW12 gyro\n");
 	}
 
-	// reset counter
+	sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
+		SENSOR_ATTR_SAMPLING_FREQUENCY, &odr_attr);
+
+	sensor_g_to_ms2(16, &fs_attr);
+
+	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
+		    SENSOR_ATTR_FULL_SCALE, &fs_attr) < 0) {
+		shell_print(sh, "Cannot set sampling frequency for LIS2DW12 gyro\n");
+	}
+
+	/* reset counter */
 	lis2dw12_trig_cnt = 0;
 
 #ifdef CONFIG_LIS2DW12_TRIGGER

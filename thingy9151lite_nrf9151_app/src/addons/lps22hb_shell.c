@@ -1,5 +1,5 @@
 /*
- * LPS22HH shell commands
+ * LPS22HB shell commands
  *
  * Copyright (c) 2024 Emcraft Systems
  *
