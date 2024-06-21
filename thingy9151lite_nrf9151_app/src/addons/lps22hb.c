@@ -1,3 +1,12 @@
+/*
+ * LPS22HB init
+ *
+ * Copyright (c) 2024 Emcraft Systems
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ */
+
 #include <zephyr/logging/log.h>
 #include <zephyr/drivers/sensor.h>
 
@@ -26,7 +35,15 @@ void lps22hb_init()
 {
 	if (IS_ENABLED(CONFIG_LPS22HB_TRIGGER)) {
 		const struct device *const dev = DEVICE_DT_GET_ONE(st_lps22hb_press);
-		struct sensor_value attr;
+		int ret;
+
+		/* Set ODR to 10 Hz */
+		struct sensor_value attr = {
+			.val1 = 10,
+			.val2 = 0,
+		};
+
+		/* Set trigger */
 		struct sensor_trigger trig = {
 			.type = SENSOR_TRIG_DATA_READY,
 			.chan = SENSOR_CHAN_ALL,
@@ -38,12 +55,15 @@ void lps22hb_init()
 
 		if (sensor_trigger_set(dev, &trig, lps22hb_handler) < 0) {
 			LOG_ERR("Cannot configure trigger");
+			return;
 		}
 
-		attr.val1 = 10;
-		attr.val2 = 0;
+		ret = sensor_attr_set(dev, SENSOR_CHAN_ALL, SENSOR_ATTR_SAMPLING_FREQUENCY, &attr);
 
-		sensor_attr_set(dev, SENSOR_CHAN_ALL, SENSOR_ATTR_SAMPLING_FREQUENCY, &attr);
+		if (ret != 0) {
+			LOG_ERR("Cannot set sampling frequency");
+			return;
+		}
 	}
 }
 
