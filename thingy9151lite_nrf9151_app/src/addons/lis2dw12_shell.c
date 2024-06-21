@@ -19,7 +19,6 @@ static inline float out_ev(struct sensor_value *val)
 	return (val->val1 + (float)val->val2 / 1000000);
 }
 
-
 static int cmd_lis2dw12_get(const struct shell *sh, size_t argc, char **argv)
 {
 	struct sensor_value x, y, z;
@@ -44,6 +43,7 @@ static int cmd_lis2dw12_get(const struct shell *sh, size_t argc, char **argv)
 	return 0;
 }
 
+/* set accelerometer sampling rate */
 static int cmd_lis2dw12_set(const struct shell *sh, size_t argc, char **argv)
 {
 
@@ -51,28 +51,25 @@ static int cmd_lis2dw12_set(const struct shell *sh, size_t argc, char **argv)
 	struct sensor_value odr_attr, fs_attr;
 	const struct device *const dev = DEVICE_DT_GET_ONE(st_lis2dw12);
 
-	if (argc < 3) {
-		shell_print(sh, "Example: lis2dw12_set 100 0 - set ODR to 100.0 Hz");
+	if (argc < 2) {
+		shell_print(sh, "Example: lis2dw12_set 12 - set ODR to 12.5 Hz");
 		return 0;
 	}
 	if (!device_is_ready(dev)) {
-		shell_print(sh, "%s: device not ready.\n", dev->name);
+		shell_print(sh, "%s: device not ready.", dev->name);
 		return 0;
 	}
-	/*
-	   set accel/gyro sampling frequency to (argv[1]).(argv[2]) Hz
-	   uart:~$ lis2dw12_set 100 0
-	   Setting sampling rate to 100 Hz
-	*/
-	odr_attr.val1 = strtol(argv[1], NULL, 10);
-	odr_attr.val2 = strtol(argv[2], NULL, 10);
 
-	shell_print(sh, "Setting sampling rate to %f Hz\n", out_ev(&odr_attr));
+	/* ODR: LIS2DW12 will change 1 to 1.6 Hz, 12 to 12.5 Hz */
+	odr_attr.val1 = strtol(argv[1], NULL, 10);
+	odr_attr.val2 = 0;
+
+	shell_print(sh, "Setting sampling rate to %u Hz", odr_attr.val1);
 
 	ret = sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			SENSOR_ATTR_SAMPLING_FREQUENCY, &odr_attr);
 	if (ret != 0) {
-		shell_print(sh, "Cannot set sampling frequency for accelerometer.\n");
+		shell_print(sh, "Cannot set sampling frequency for accelerometer");
 		return ret;
 	}
 
@@ -80,7 +77,7 @@ static int cmd_lis2dw12_set(const struct shell *sh, size_t argc, char **argv)
 
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			    SENSOR_ATTR_FULL_SCALE, &fs_attr) < 0) {
-		shell_print(sh, "Cannot set sampling frequency for LIS2DW12 gyro\n");
+		shell_print(sh, "Cannot set sampling frequency for LIS2DW12 gyro");
 		return 0;
 	}
 
@@ -94,6 +91,7 @@ static int cmd_lis2dw12_set(const struct shell *sh, size_t argc, char **argv)
 	return 0;
 }
 
+/* set accelerometer power mode */
 static int cmd_lis2dw12_pm_set(const struct shell *sh, size_t argc, char **argv)
 {
 	const struct device *const dev = DEVICE_DT_GET_ONE(st_lis2dw12);
@@ -107,7 +105,7 @@ static int cmd_lis2dw12_pm_set(const struct shell *sh, size_t argc, char **argv)
 	}
 
 	if (!device_is_ready(dev)) {
-		shell_print(sh, "%s: device not ready.\n", dev->name);
+		shell_print(sh, "%s: device not ready", dev->name);
 		return 0;
 	}
 	mode = atoi(argv[1]);
@@ -129,19 +127,19 @@ static int cmd_lis2dw12_pm_set(const struct shell *sh, size_t argc, char **argv)
 			pm = LIS2DW12_CONT_LOW_PWR_12bit;
 	}
 	
-	shell_print(sh, "Setting power mode %d", pm);
+	shell_print(sh, "Setting power mode %d (val: %d)", mode, pm);
 	attr.val1 = CONFIGURE_PM_MODE;
 	attr.val2 = pm;
 	
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			    SENSOR_ATTR_CONFIGURATION, &attr) < 0) {
-		shell_print(sh, "Cannot set power mode for LIS2DW12 gyro\n");
+		shell_print(sh, "Cannot set power mode for LIS2DW12 gyro");
 	}
 
 	return 0;
 } 
 
-
+/* set accelerometer interrupt pin and switch interrupt handler to it */
 static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv)
 {
 	const struct device *const dev = DEVICE_DT_GET_ONE(st_lis2dw12);
@@ -149,7 +147,7 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 	struct sensor_value attr, fs_attr;
 	struct sensor_value odr_attr = {
 			.val1 = 12,
-			.val2 = 500000,
+			.val2 = 0,
 		};
 
 	if (argc < 2) {
@@ -158,7 +156,7 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 	}
 
 	if (!device_is_ready(dev)) {
-		shell_print(sh, "%s: device not ready.\n", dev->name);
+		shell_print(sh, "%s: device not ready", dev->name);
 		return 0;
 	}
 	pin = atoi(argv[1]);
@@ -170,7 +168,7 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			    SENSOR_ATTR_CONFIGURATION, &attr) < 0) {
-		shell_print(sh, "Cannot set pin for LIS2DW12 gyro\n");
+		shell_print(sh, "Cannot set pin for LIS2DW12 gyro");
 	}
 
 	sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
@@ -180,7 +178,7 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 		    SENSOR_ATTR_FULL_SCALE, &fs_attr) < 0) {
-		shell_print(sh, "Cannot set sampling frequency for LIS2DW12 gyro\n");
+		shell_print(sh, "Cannot set sampling frequency for LIS2DW12 gyro");
 	}
 
 	/* reset counter */
@@ -200,7 +198,7 @@ static int cmd_lis2dw12_pin_set(const struct shell *sh, size_t argc, char **argv
 SHELL_CMD_REGISTER(lis2dw12_get, NULL, "Print IMU data", 
 		cmd_lis2dw12_get);
 
-SHELL_CMD_REGISTER(lis2dw12_set, NULL, "Set LIS2DW12 IMU sampling frequency (100 0)",
+SHELL_CMD_REGISTER(lis2dw12_set, NULL, "Set LIS2DW12 IMU sampling frequency (default is 12)",
 		cmd_lis2dw12_set);
 
 SHELL_CMD_REGISTER(lis2dw12_pm, NULL, "Set LIS2DW12 IMU power mode (1 - high performance, 2..4 low power mode)",
