@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021 Nordic Semiconductor ASA
+ * Copyright (c) 2024 Emcraft Systems
  *
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
@@ -21,12 +22,22 @@ extern "C" {
 enum watchdog_evt_type {
 	WATCHDOG_EVT_START,
 	WATCHDOG_EVT_TIMEOUT_INSTALLED,
-	WATCHDOG_EVT_FEED
+	WATCHDOG_EVT_FEED,
+	WATCHDOG_EVT_STOP,
+	WATCHDOG_EVT_RESET
 };
 
 struct watchdog_evt {
 	enum watchdog_evt_type type;
 	uint32_t timeout;
+};
+
+/** @brief Reset reason enumeration */
+enum watchdog_reset_reason
+{
+	WDT_CONTROL_RESET_REASON_USER = 0,
+
+	WDT_CONTROL_RESET_REASON_TOTAL
 };
 
 /** @brief Watchdog library event handler.
@@ -50,6 +61,13 @@ int watchdog_init_and_start(void);
  *  @param evt_handler Event handler. Handler is de-registered if parameter is NULL.
  */
 void watchdog_register_handler(watchdog_evt_handler_t evt_handler);
+
+/** @brief Stop watchdog feed.
+ *
+ *  @param reason_id Reset reason ID that caused device reset.
+ *  @param user_data unused. Added for compatibility with task wdt.
+ */
+void watchdog_stop_feed(int reason_id, void *user_data);
 
 #ifdef __cplusplus
 }

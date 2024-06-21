@@ -1,5 +1,6 @@
 #
 # Copyright (c) 2021 Nordic Semiconductor
+# Copyright (c) 2024 Emcraft Systems
 #
 # SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
 #
@@ -11,9 +12,22 @@ menuconfig WATCHDOG_APPLICATION
 
 if WATCHDOG_APPLICATION
 
-config WATCHDOG_APPLICATION_TIMEOUT_SEC
-	int "Application watchdog timeout in seconds"
-	default 60
+config WATCHDOG_APPLICATION_USE_NPM1300_WDT
+	bool "Use nPM1300 watchdog"
+	default n
+
+config WATCHDOG_APPLICATION_USE_INTERNAL_WDT
+	bool "Use internal watchdog"
+	depends on !WATCHDOG_APPLICATION_USE_NPM1300_WDT
+	default y if !WATCHDOG_APPLICATION_USE_NPM1300_WDT
+
+config WATCHDOG_APPLICATION_TIMEOUT_MS
+	int "Watchdog timeout in milliseconds"
+	default 5000
+
+config WATCHDOG_APPLICATION_FEED_PERIOD_MS
+	int "Watchdog feed period in milliseconds"
+	default 2500
 
 endif # WATCHDOG_APPLICATION
 
