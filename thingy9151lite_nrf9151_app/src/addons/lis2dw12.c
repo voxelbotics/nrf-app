@@ -25,16 +25,12 @@ void lis2dw12_init() {
 
 		struct sensor_value odr_attr = {
 			.val1 = 12,
-			.val2 = 500000,
+			.val2 = 0,
 		};
 		struct sensor_value fs_attr;
 		struct sensor_trigger trig = {
 			.type = SENSOR_TRIG_DATA_READY,
 			.chan = SENSOR_CHAN_ACCEL_XYZ,
-		};
-		struct sensor_value pm_attr = {
-			.val1 = CONFIGURE_PM_MODE,
-			.val2 = LIS2DW12_HIGH_PERFORMANCE,
 		};
 
 		if (!device_is_ready(dev)) {		
@@ -43,11 +39,6 @@ void lis2dw12_init() {
 		
 		LOG_DBG("Setting up handler for LIS2DW12");
 		
-		if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
-			    SENSOR_ATTR_CONFIGURATION, &pm_attr) < 0) {
-			LOG_ERR("Cannot set power mode for LIS2DW12 gyro");
-		}
-
 		sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			SENSOR_ATTR_SAMPLING_FREQUENCY, &odr_attr);
 
