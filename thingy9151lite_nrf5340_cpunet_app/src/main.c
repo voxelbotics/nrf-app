@@ -27,6 +27,8 @@
 #include <zephyr/logging/log_ctrl.h>
 #include <zephyr/logging/log.h>
 
+#include "config.h"
+
 LOG_MODULE_REGISTER(hci_ipc, CONFIG_BT_LOG_LEVEL);
 
 static struct ipc_ept hci_ept;
@@ -382,6 +384,13 @@ int main(void)
 
 	/* incoming events and data from the controller */
 	static K_FIFO_DEFINE(rx_queue);
+
+	printk("Start thingy9151lite_nrf5340_cpunet_app v%d.%d-%d-%s on %s\n",
+	       CONFIG_VERSION_MAJOR,
+	       CONFIG_VERSION_MINOR,
+	       CONFIG_BUILD_NUMBER,
+	       CONFIG_BUILD_DEBUG ? "debug" : "release",
+	       CONFIG_BOARD);
 
 	LOG_DBG("Start");
 
