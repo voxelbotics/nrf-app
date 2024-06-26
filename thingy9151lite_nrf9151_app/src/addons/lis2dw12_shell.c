@@ -14,13 +14,15 @@
 
 #include "lis2dw12_trig.h"
 
+LOG_MODULE_REGISTER(lis2dw12, CONFIG_APPLICATION_MODULE_LOG_LEVEL);
+
 static inline float out_ev(struct sensor_value *val)
 {
 	return (val->val1 + (float)val->val2 / 1000000);
 }
 
 /* set sampling frequency */
-static void lis2dw12_set_odr(const struct shell *sh, const struct device *dev, uint32_t odr)
+static void lis2dw12_set_odr(const struct device *dev, uint32_t odr)
 {
 	struct sensor_value odr_attr;
 
@@ -29,13 +31,13 @@ static void lis2dw12_set_odr(const struct shell *sh, const struct device *dev, u
 
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 		SENSOR_ATTR_SAMPLING_FREQUENCY, &odr_attr) < 0) {
-			shell_print(sh, "Cannot set sampling frequency for LIS2DW12 gyro");
+			LOG_DBG("Cannot set sampling frequency for LIS2DW12 gyro");
 	}
 
 }
 
 /* set interrupt pin */
-static void lis2dw12_set_pin(const struct shell *sh, const struct device *dev, int pin) {
+static void lis2dw12_set_pin(const struct device *dev, int pin) {
 	struct sensor_value attr;
 
 	attr.val1 = CONFIGURE_INT_PIN;
@@ -43,26 +45,25 @@ static void lis2dw12_set_pin(const struct shell *sh, const struct device *dev, i
 
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 			    SENSOR_ATTR_CONFIGURATION, &attr) < 0) {
-		shell_print(sh, "Cannot set pin for LIS2DW12 gyro");
+		LOG_DBG("Cannot set pin for LIS2DW12 gyro");
 	}
 
 }
 
 /* set full scale */
-static void lis2dw12_set_scale(const struct shell *sh, const struct device *dev)
+static void lis2dw12_set_scale(const struct device *dev)
 {
 	struct sensor_value fs_attr;
 	sensor_g_to_ms2(16, &fs_attr);
 
 	if (sensor_attr_set(dev, SENSOR_CHAN_ACCEL_XYZ,
 		    SENSOR_ATTR_FULL_SCALE, &fs_attr) < 0) {
-		shell_print(sh, "Cannot set scale for LIS2DW12 gyro");
-		return;
+		LOG_DBG("Cannot set scale for LIS2DW12 gyro");
 	}
 }
 
 /* set trigger handler */
-static void lis2dw12_set_trigger(const struct shell *sh, const struct device *dev)
+static void lis2dw12_set_trigger(const struct device *dev)
 {
 #ifdef CONFIG_LIS2DW12_TRIGGER
 	struct sensor_trigger trig;
@@ -77,10 +78,10 @@ static void lis2dw12_set_trigger(const struct shell *sh, const struct device *de
 }
 
 
-static void lis2dw12_configure_tap_handler(const struct shell *sh, const struct device *dev)
+void lis2dw12_configure_tap_handler(const struct device *dev)
 {
-	lis2dw12_set_pin(sh, dev, 1);
-	lis2dw12_set_scale(sh, dev);
+	lis2dw12_set_pin(dev, 1);
+	lis2dw12_set_scale(dev);
 
 #ifdef CONFIG_LIS2DW12_TAP
 	struct sensor_trigger tap_trigger = {
@@ -90,18 +91,17 @@ static void lis2dw12_configure_tap_handler(const struct shell *sh, const struct 
 
 	if (sensor_trigger_set(dev, &tap_trigger,
 			       lis2dw12_trigger_handler) < 0) {
-		shell_print(sh, "Cannot set tap handler for LIS2DW12");
+		LOG_DBG("Cannot set tap handler for LIS2DW12");
 	}
 #endif
 }
 
-static void lis2dw12_configure_dataready_handler(const struct shell *sh, const struct device *dev, int pin)
+static void lis2dw12_configure_dataready_handler(const struct device *dev, int pin)
 {
-
-	lis2dw12_set_pin(sh, dev, pin);
-	lis2dw12_set_odr(sh, dev, 12);
-	lis2dw12_set_scale(sh, dev);
-	lis2dw12_set_trigger(sh, dev);
+	lis2dw12_set_pin(dev, pin);
+	lis2dw12_set_odr(dev, 12);
+	lis2dw12_set_scale(dev);
+	lis2dw12_set_trigger(dev);
 }
 
 static int cmd_lis2dw12_get(const struct shell *sh, size_t argc, char **argv)
@@ -148,9 +148,9 @@ static int cmd_lis2dw12_set(const struct shell *sh, size_t argc, char **argv)
 
 	shell_print(sh, "Setting sampling rate to %u Hz", odr);
 
-	lis2dw12_set_odr(sh, dev, odr);
-	lis2dw12_set_scale(sh, dev);
-	lis2dw12_set_trigger(sh, dev);
+	lis2dw12_set_odr(dev, odr);
+	lis2dw12_set_scale(dev);
+	lis2dw12_set_trigger(dev);
 
 	return 0;
 }
@@ -215,11 +215,11 @@ static int cmd_lis2dw12_init(const struct shell *sh, size_t argc, char **argv)
 
 	if (argc > 1 && strncmp(argv[1], "drdy", 4) == 0) {
 		shell_print(sh, "Setting data-ready handler");
-		lis2dw12_configure_dataready_handler(sh, dev, 1);
-		lis2dw12_configure_dataready_handler(sh, dev, 2);
+		lis2dw12_configure_dataready_handler(dev, 1);
+		lis2dw12_configure_dataready_handler(dev, 2);
 	} else {
 		shell_print(sh, "Setting tap handler");
-		lis2dw12_configure_tap_handler(sh, dev);
+		lis2dw12_configure_tap_handler(dev);
 	}
 
 	return 0;

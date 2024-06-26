@@ -24,6 +24,7 @@
 #include "events/sensor_module_event.h"
 #include "events/util_module_event.h"
 #include "events/modem_module_event.h"
+#include "addons/lis2dw12_trig.h"
 #include "addons/lps22hh_shell.h"
 #include "addons/lps22hb_shell.h"
 #include "config.h"
@@ -542,6 +543,9 @@ int main(void)
 
 	/* Init LPS22HH barometer */
 	lps22hh_init();
+
+	/* Init LIS2DW12 accelerometer */
+	lis2dw12_init();
 
 	if (app_event_manager_init()) {
 		/* Without the Application Event Manager, the application will not work
