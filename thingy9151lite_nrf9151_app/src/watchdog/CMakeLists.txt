@@ -1,5 +1,6 @@
 #
 # Copyright (c) 2021 Nordic Semiconductor ASA
+# Copyright (c) 2024 Emcraft Systems
 #
 # SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
 #

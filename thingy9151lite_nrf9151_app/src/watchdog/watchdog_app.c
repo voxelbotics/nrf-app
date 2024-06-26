@@ -34,7 +34,7 @@ struct watchdog_data_storage {
 	struct k_work disable_work;
 };
 
-/*  watchdog work queue stack */
+/* watchdog work queue stack */
 static K_THREAD_STACK_DEFINE(watchdog_stack_area, WATCHDOG_STACK_SIZE);
 /* Separate queue for watchdog tasks */
 static struct k_work_q watchdog_work_q;
@@ -75,7 +75,7 @@ void watchdog_stop_feed(int reason_id, void *user_data)
 
 /* Set up watchdog timeout */
 static int watchdog_timeout_install(const struct watchdog_config_storage *config,
-									struct watchdog_data_storage *data)
+				struct watchdog_data_storage *data)
 {
 	__ASSERT_NO_MSG(config != NULL);
 	__ASSERT_NO_MSG(data != NULL);
@@ -141,7 +141,7 @@ static int watchdog_disable(const struct watchdog_config_storage *config)
 
 /* Set up timeout for watchdog and start it */
 static int watchdog_enable(const struct watchdog_config_storage *config,
-							struct watchdog_data_storage *data)
+			struct watchdog_data_storage *data)
 {
 	int err;
 
@@ -185,7 +185,7 @@ static void watchdog_feed_worker(struct k_work *work_desc)
 
 	if (!(bool)atomic_get(&(watchdog_data.stop_feed))) {
 		k_work_reschedule_for_queue(&watchdog_work_q, &watchdog_data.feed_work,
-									K_MSEC(CONFIG_WATCHDOG_APPLICATION_FEED_PERIOD_MS));
+					K_MSEC(CONFIG_WATCHDOG_APPLICATION_FEED_PERIOD_MS));
 	} else {
 		LOG_INF("Watchdog feed stopped");
 	}
@@ -262,8 +262,8 @@ int watchdog_init_and_start(void)
 	k_work_init(&(watchdog_data.enable_work), watchdog_enable_worker);
 	k_work_init(&(watchdog_data.disable_work), watchdog_disable_worker);
 	k_work_queue_start(&watchdog_work_q, watchdog_stack_area,
-						K_THREAD_STACK_SIZEOF(watchdog_stack_area),
-						WATCHDOG_THREAD_PRIORITY, NULL);
+			K_THREAD_STACK_SIZEOF(watchdog_stack_area),
+			WATCHDOG_THREAD_PRIORITY, NULL);
 
 	int err = k_work_submit_to_queue(&watchdog_work_q, &(watchdog_data.enable_work));
 	if (err < 0) {
@@ -277,14 +277,11 @@ void watchdog_register_handler(watchdog_evt_handler_t evt_handler)
 {
 	if (evt_handler == NULL) {
 		app_evt_handler = NULL;
-
 		LOG_DBG("Previously registered handler %p de-registered", app_evt_handler);
-
 		return;
 	}
 
 	LOG_DBG("Registering handler %p", evt_handler);
-
 	app_evt_handler = evt_handler;
 
 	/* If the application watchdog already has been initialized and started prior to an
@@ -347,10 +344,10 @@ static int watchdog_status_cmd(const struct shell *sh, size_t argc, char **argv)
 	ARG_UNUSED(argc);
 	ARG_UNUSED(argv);
 
-	printf("\tWatchdog status: %s\r\n", (bool)atomic_get(&(watchdog_data.initialized)) ? "enabled" : "disabled");
-	printf("\tWatchdog stop requested: %s\r\n", (bool)atomic_get(&(watchdog_data.stop_feed)) ? "yes" : "no");
-	printf("\tWatchdog feed period: %d ms\r\n", CONFIG_WATCHDOG_APPLICATION_FEED_PERIOD_MS);
-	printf("\tWatchdog timeout: %d ms\r\n", CONFIG_WATCHDOG_APPLICATION_TIMEOUT_MS);
+	shell_print(sh, "\tWatchdog status: %s", (bool)atomic_get(&(watchdog_data.initialized)) ? "enabled" : "disabled");
+	shell_print(sh, "\tWatchdog stop requested: %s", (bool)atomic_get(&(watchdog_data.stop_feed)) ? "yes" : "no");
+	shell_print(sh, "\tWatchdog feed period: %d ms", CONFIG_WATCHDOG_APPLICATION_FEED_PERIOD_MS);
+	shell_print(sh, "\tWatchdog timeout: %d ms", CONFIG_WATCHDOG_APPLICATION_TIMEOUT_MS);
 
 	return 0;
 }
