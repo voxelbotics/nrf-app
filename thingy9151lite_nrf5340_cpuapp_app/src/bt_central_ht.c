@@ -52,6 +52,7 @@ static uint8_t notify_func(struct bt_conn *conn,
 			   struct bt_gatt_subscribe_params *params,
 			   const void *data, uint16_t length)
 {
+	static uint32_t print_count = 0;
 	double temperature;
 	uint32_t mantissa;
 	int8_t exponent;
@@ -67,7 +68,12 @@ static uint8_t notify_func(struct bt_conn *conn,
 	exponent = ((uint8_t *)data)[4];
 	temperature = (double)mantissa * pow(10, exponent);
 
-	LOG_INF("Temperature %gC.", temperature);
+	print_count++;
+	if (print_count <= 10 || print_count % 60 == 0) {
+		LOG_INF("Temperature %gC.", temperature);
+	} else {
+		LOG_DBG("Temperature %gC.", temperature);
+	}
 
 	return BT_GATT_ITER_CONTINUE;
 }
