@@ -77,6 +77,20 @@ static void lis2dw12_set_trigger(const struct device *dev)
 #endif
 }
 
+/* unset trigger handler */
+static void lis2dw12_unset_trigger(const struct device *dev)
+{
+#ifdef CONFIG_LIS2DW12_TRIGGER
+	struct sensor_trigger trig;
+
+	trig.type = SENSOR_TRIG_DATA_READY;
+	trig.chan = SENSOR_CHAN_ACCEL_XYZ;
+
+	/* reset counter */
+	lis2dw12_trig_cnt = 0;
+	sensor_trigger_set(dev, &trig, NULL);
+#endif
+}
 
 void lis2dw12_configure_tap_handler(const struct device *dev)
 {
@@ -213,14 +227,24 @@ static int cmd_lis2dw12_init(const struct shell *sh, size_t argc, char **argv)
 		return 0;
 	}
 
-	if (argc > 1 && strncmp(argv[1], "drdy", 4) == 0) {
-		shell_print(sh, "Setting data-ready handler");
-		lis2dw12_configure_dataready_handler(dev, 1);
-		lis2dw12_configure_dataready_handler(dev, 2);
-	} else {
-		shell_print(sh, "Setting tap handler");
-		lis2dw12_configure_tap_handler(dev);
+	shell_print(sh, "Setting data-ready handler on INT2");
+	lis2dw12_configure_dataready_handler(dev, 2);
+
+	return 0;
+}
+
+/* unset accelerometer interrupts*/
+static int cmd_lis2dw12_uninit(const struct shell *sh, size_t argc, char **argv)
+{
+	const struct device *const dev = DEVICE_DT_GET_ONE(st_lis2dw12);
+
+	if (!device_is_ready(dev)) {
+		shell_print(sh, "%s: device not ready", dev->name);
+		return 0;
 	}
+
+	shell_print(sh, "Unsetting data-ready handler on INT2");
+	lis2dw12_unset_trigger(dev);
 
 	return 0;
 }
@@ -234,5 +258,8 @@ SHELL_CMD_REGISTER(lis2dw12_set, NULL, "Set LIS2DW12 IMU sampling frequency (def
 SHELL_CMD_REGISTER(lis2dw12_pm, NULL, "Set LIS2DW12 IMU power mode (1 - high performance, 2..4 low power mode)",
 		cmd_lis2dw12_pm_set);
 
-SHELL_CMD_REGISTER(lis2dw12_init, NULL, "Set LIS2DW12 interrupts",
+SHELL_CMD_REGISTER(lis2dw12_init, NULL, "Set LIS2DW12 data-ready handler on INT2",
 		cmd_lis2dw12_init);
+
+SHELL_CMD_REGISTER(lis2dw12_uninit, NULL, "Set LIS2DW12 data-ready handler on INT2",
+		cmd_lis2dw12_uninit);
