@@ -24,9 +24,9 @@
 #include "events/sensor_module_event.h"
 #include "events/util_module_event.h"
 #include "events/modem_module_event.h"
+#include "addons/lis2dw12_trig.h"
 #include "addons/lps22hh_shell.h"
 #include "addons/lps22hb_shell.h"
-#include "addons/lis2dw12_shell.h"
 #include "config.h"
 
 #include <zephyr/logging/log.h>
