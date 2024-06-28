@@ -3,6 +3,9 @@
 
 #include <zephyr/drivers/sensor.h>
 
+#define LPS22HB_CMD_SET_MODE 0
+#define LPS22HB_CMD_SET_THRESHOLD 1
+
 #ifdef CONFIG_LPS22HB_TRIGGER
 
 extern int lps22hb_trig_cnt;

@@ -42,6 +42,12 @@ static int cmd_gpio_interrupt(const struct shell *sh,
     struct gpio_nrfx_data * gpio1_data = lis2dw12_gpio1.port->data;
     struct gpio_nrfx_data * gpio2_data = lis2dw12_gpio2.port->data;
 
+    /* LPS22HB pins */
+    static const struct gpio_dt_spec lps22hb_gpio =
+            GPIO_DT_SPEC_GET(DT_NODELABEL(lps22hb), drdy_gpios);
+
+    struct gpio_nrfx_data * lps22hb_gpio_data = lps22hb_gpio.port->data;
+
     if (pin == -1 || pin == lis2dw12_gpio1.pin) {
 		shell_print(sh, "LIS2DW12 INT1 (pin %d): %u", lis2dw12_gpio1.pin,
             gpio1_data->counters[lis2dw12_gpio1.pin]);
@@ -49,6 +55,10 @@ static int cmd_gpio_interrupt(const struct shell *sh,
 	if (pin == -1 || pin == lis2dw12_gpio2.pin) {
 		shell_print(sh, "LIS2DW12 INT2 (pin %d): %u", lis2dw12_gpio2.pin,
             gpio2_data->counters[lis2dw12_gpio2.pin]);
+    }
+    if (pin == -1 || pin == lps22hb_gpio.pin) {
+        shell_print(sh, "LPS22HB       (pin %d): %u", lps22hb_gpio.pin,
+            lps22hb_gpio_data->counters[lps22hb_gpio.pin]);
     }
 
     return 0;
