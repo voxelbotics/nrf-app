@@ -1,0 +1,14 @@
+#
+# Copyright (c) 2024 Emcraft Systems
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menuconfig PMIC_REGULATOR
+	bool "Enable PMIC regulator module"
+	select REGULATOR
+	default y
+
+module = REGULATOR
+module-str = regulator
+source "subsys/logging/Kconfig.template.log_config"

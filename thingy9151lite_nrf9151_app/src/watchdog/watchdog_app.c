@@ -11,6 +11,9 @@
 #include <zephyr/sys/atomic.h>
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/watchdog.h>
+#if defined(CONFIG_PMIC_REGULATOR)
+#include "pmic_regulator.h"
+#endif
 
 #include "watchdog_app.h"
 
@@ -69,6 +72,10 @@ void watchdog_stop_feed(int reason_id, void *user_data)
 		LOG_ERR("Watchdog disabled, stopping feed has no effect");
 		return;
 	}
+
+#if defined(CONFIG_PMIC_REGULATOR)
+	pmic_regulator_deinit();
+#endif
 	/* Tell watchdog feed worker to stop rescheduling. */
 	atomic_set(&(watchdog_data.stop_feed), 1);
 }
