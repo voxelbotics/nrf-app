@@ -82,7 +82,7 @@
 		tap-threshold = <1>, <1>, <1>;
 	};
 
-	lps22hh@5d {
+	lps22hh: lps22hh@5d {
 		compatible = "st,lps22hh";
 		reg = <0x5d>;
 		drdy-gpios = <&arduino_header 15 GPIO_ACTIVE_HIGH>;
