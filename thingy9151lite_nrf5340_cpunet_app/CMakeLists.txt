@@ -1,17 +1,15 @@
-#
-# Copyright (c) 2021 Nordic Semiconductor
-#
-# SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
-#
+# SPDX-License-Identifier: Apache-2.0
+
 cmake_minimum_required(VERSION 3.20.0)
 
 list(APPEND BOARD_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
-project(NONE)
+project(hci_ipc)
 
-# NORDIC SDK APP START
-target_sources(app PRIVATE
-  src/main.c
-)
-# NORDIC SDK APP END
-zephyr_library_include_directories(.)
+target_sources(app PRIVATE src/main.c)
+
+# Remove after 3.7.0 is released
+dt_chosen(chosen_hci_rpmsg PROPERTY "zephyr,bt-hci-rpmsg-ipc")
+if(DEFINED chosen_hci_rpmsg)
+  message(FATAL_ERROR  "zephyr,bt-hci-rpmsg-ipc has been renamed to zephyr,bt-hci-ipc")
+endif()

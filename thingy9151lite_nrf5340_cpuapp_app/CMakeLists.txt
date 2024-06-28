@@ -12,6 +12,7 @@ project(imd-nrf)
 target_sources(app PRIVATE
 	src/main.c
 	src/usb_uart.c
+	src/bt_central_ht.c
 )
 # NORDIC SDK APP END
 
