@@ -66,11 +66,6 @@
 	status = "okay";
 };
 
-&uart0 {
-	status = "okay";
-	current-speed = <38400>;
-};
-
 &uart1 {
 	status = "okay";
 #if 0 /* TBD - the app hangs with hw-flow-control enabled */
