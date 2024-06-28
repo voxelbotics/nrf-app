@@ -10,7 +10,7 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/sensor.h>
 #include <ctype.h>
-#include "lps22hb_shell.h"
+#include "lps22hb_trig.h"
 
 static int cmd_lps22hb_get(const struct shell *sh, size_t argc, char **argv)
 {
@@ -120,8 +120,8 @@ static int cmd_lps22hb_pm_set(const struct shell *sh, size_t argc, char **argv)
 		shell_print(sh, "Setting low-current mode.\n");
 	}
 
-	attr.val1 = mode;
-	attr.val2 = 0;
+	attr.val1 = LPS22HB_CMD_SET_MODE;
+	attr.val2 = mode;
 
 	int ret = sensor_attr_set(dev, SENSOR_CHAN_ALL,
 			SENSOR_ATTR_CONFIGURATION, &attr);
