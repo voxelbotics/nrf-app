@@ -40,7 +40,7 @@
 		irq-gpios =  <&gpio0 7 GPIO_ACTIVE_HIGH>, <&gpio0 4 GPIO_ACTIVE_HIGH>;
 	};
 
-	lps22hh@5d {
+	lps22hh: lps22hh@5d {
 		compatible = "st,lps22hh";
 		reg = <0x5d>;
 		drdy-gpios = <&arduino_header 15 GPIO_ACTIVE_HIGH>;
