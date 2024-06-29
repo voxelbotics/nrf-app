@@ -10,7 +10,7 @@
 #include <zephyr/shell/shell.h>
 #include <zephyr/drivers/sensor.h>
 #include <ctype.h>
-#include "lps22hh_shell.h"
+#include "lps22hh_trig.h"
 
 static int cmd_lps22hh_get(const struct shell *sh, size_t argc, char **argv)
 {
@@ -36,7 +36,7 @@ static int cmd_lps22hh_get(const struct shell *sh, size_t argc, char **argv)
 		shell_print(sh, "Cannot read LPS22HH temperature channel\n");
 		return 0;
 	}
-	
+
 	/* display pressure */
 	shell_print(sh, "Pressure: %.3f kPa\n", sensor_value_to_double(&pressure));
 
@@ -68,13 +68,12 @@ static int cmd_lps22hh_set(const struct shell *sh, size_t argc, char **argv)
 	   uart:~$ lps22hh_set 1
 	   Setting sampling rate to 1 Hz
 	*/
-	attr.val1 = strtol(argv[1], NULL, 10);	
+	attr.val1 = strtol(argv[1], NULL, 10);
 	attr.val2 = 0;
 
 	shell_print(sh, "Setting sampling rate to %u Hz\n", attr.val1);
 
-	ret = sensor_attr_set(dev, SENSOR_CHAN_ALL,
-			SENSOR_ATTR_SAMPLING_FREQUENCY, &attr);
+	ret = sensor_attr_set(dev, SENSOR_CHAN_ALL, SENSOR_ATTR_SAMPLING_FREQUENCY, &attr);
 
 	if (ret != 0) {
 		shell_print(sh, "Cannot configure sampling rate.\n");
@@ -91,7 +90,6 @@ static int cmd_lps22hh_set(const struct shell *sh, size_t argc, char **argv)
 			shell_print(sh, "Cannot configure trigger\n");
 			return 0;
 		}
-		
 	}
 
 	return 0;
@@ -101,7 +99,7 @@ static int cmd_lps22hh_pm_set(const struct shell *sh, size_t argc, char **argv)
 {
 	const struct device *const dev = DEVICE_DT_GET_ONE(st_lps22hh);
 	struct sensor_value attr;
-	uint8_t mode = 0; 
+	uint8_t mode = 0;
 
 	if (argc < 1) {
 		return 0;
@@ -119,12 +117,10 @@ static int cmd_lps22hh_pm_set(const struct shell *sh, size_t argc, char **argv)
 		shell_print(sh, "Setting low-current mode.\n");
 	}
 
-	
-	attr.val1 = mode;
-	attr.val2 = 0;
+	attr.val1 = LPS22HH_CMD_SET_MODE;
+	attr.val2 = mode;
 
-	int ret = sensor_attr_set(dev, SENSOR_CHAN_ALL,
-			SENSOR_ATTR_CONFIGURATION, &attr);
+	int ret = sensor_attr_set(dev, SENSOR_CHAN_ALL, SENSOR_ATTR_CONFIGURATION, &attr);
 
 	if (ret != 0) {
 		shell_print(sh, "Cannot configure power mode.\n");
@@ -132,13 +128,11 @@ static int cmd_lps22hh_pm_set(const struct shell *sh, size_t argc, char **argv)
 	}
 
 	return 0;
-} 
+}
 
-SHELL_CMD_REGISTER(lps22hh_get, NULL, "Print LPS22HH data", 
-		cmd_lps22hh_get);
+SHELL_CMD_REGISTER(lps22hh_get, NULL, "Print LPS22HH data", cmd_lps22hh_get);
 
-SHELL_CMD_REGISTER(lps22hh_set, NULL, "Set LPS22HH sampling frequency (1..200)",
-		cmd_lps22hh_set);
+SHELL_CMD_REGISTER(lps22hh_set, NULL, "Set LPS22HH sampling frequency (1..200)", cmd_lps22hh_set);
 
 SHELL_CMD_REGISTER(lps22hh_pm, NULL, "Set LPS22HH power mode (lc - low current, ln - low noise)",
-		cmd_lps22hh_pm_set);
+		   cmd_lps22hh_pm_set);

@@ -26,7 +26,7 @@
 #include "events/modem_module_event.h"
 #include "addons/lis2dw12_trig.h"
 #include "addons/lps22hb_trig.h"
-#include "addons/lps22hh_shell.h"
+#include "addons/lps22hh_trig.h"
 #include "config.h"
 
 #include <zephyr/logging/log.h>
