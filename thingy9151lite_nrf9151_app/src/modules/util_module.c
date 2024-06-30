@@ -12,6 +12,9 @@
 
 #define MODULE util_module
 
+#if defined(CONFIG_PMIC_REGULATOR)
+#include "pmic_regulator.h"
+#endif
 #if defined(CONFIG_WATCHDOG_APPLICATION)
 #include "watchdog_app.h"
 #endif
@@ -224,9 +227,19 @@ static void reboot_ack_check(uint32_t module_id)
 
 static int setup(void)
 {
+	int err = 0;
+
+#if defined(CONFIG_PMIC_REGULATOR)
+	err = pmic_regulator_init();
+
+	if (err) {
+		LOG_DBG("pmic_regulator_init, error: %d", err);
+		send_reboot_request(REASON_GENERIC);
+	}
+#endif
 
 #if defined(CONFIG_WATCHDOG_APPLICATION)
-	int err = watchdog_init_and_start();
+	err = watchdog_init_and_start();
 
 	if (err) {
 		LOG_DBG("watchdog_init_and_start, error: %d", err);

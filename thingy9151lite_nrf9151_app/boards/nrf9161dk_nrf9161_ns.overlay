@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
+#include <dt-bindings/regulator/npm1300.h>
+
 / {
 	chosen {
 		zephyr,ppp-uart = &uart1;
@@ -101,6 +103,30 @@
 
 		npm1300_wdt: npm1300_wdt {
 			compatible = "nordic,npm1300-wdt";
+		};
+
+		npm1300_regulators: regulators {
+			compatible = "nordic,npm1300-regulator";
+
+			/* limits are set to min/max allowed values */
+			npm1300_buck1: BUCK1 {
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+			};
+
+			npm1300_ldsw1: LDO1 {
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+				regulator-initial-mode = <NPM1300_LDSW_MODE_LDSW>;
+				regulator-allowed-modes = <NPM1300_LDSW_MODE_LDSW>;
+			};
+
+			npm1300_ldsw2: LDO2 {
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+				regulator-initial-mode = <NPM1300_LDSW_MODE_LDSW>;
+				regulator-allowed-modes = <NPM1300_LDSW_MODE_LDSW>;
+			};
 		};
 	};
 };
