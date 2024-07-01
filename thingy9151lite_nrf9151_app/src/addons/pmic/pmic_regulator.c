@@ -46,7 +46,8 @@ static pmic_regulator_id_t pmic_regulator_id_by_name(const char * name)
 		return ret;
 	}
 	for (uint8_t i = 0; i < PMIC_REGULATOR_TOTAL; i++) {
-		if (strncmp(name, pmic_regulator_name_array[i], strlen(name)) == 0) {
+		const char *reg_name = pmic_regulator_name_array[i];
+		if (strcmp(name, reg_name) == 0) {
 			ret = i;
 			break;
 		}
@@ -219,6 +220,7 @@ int pmic_regulator_init(void)
 		LOG_ERR("Cannot enable regulator %s. Error code: %d",
 			pmic_regulator_name_array[PMIC_REGULATOR_LDSW1], err);
 	}
+
 exit:
 	return err;
 }
@@ -249,6 +251,7 @@ static int pmic_regulator_enable_cmd(const struct shell *sh, size_t argc, char *
 
 	if (id >= PMIC_REGULATOR_TOTAL) {
 		LOG_ERR("Cannot find regulator %s.", argv[1]);
+		return 0;
 	}
 
 	pmic_regulator_enable(id);
@@ -265,6 +268,7 @@ static int pmic_regulator_disable_cmd(const struct shell *sh, size_t argc, char 
 
 	if (id >= PMIC_REGULATOR_TOTAL) {
 		LOG_ERR("Cannot find regulator %s.", argv[1]);
+		return 0;
 	}
 
 	pmic_regulator_disable(id);

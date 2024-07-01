@@ -21,7 +21,7 @@ extern "C" {
 /** @brief Regulators ID enumeration
  */
 typedef enum {
-	PMIC_REGULATOR_BUCK1,
+	PMIC_REGULATOR_BUCK1 = 0,
 	PMIC_REGULATOR_LDSW1,
 	PMIC_REGULATOR_LDSW2,
 
