@@ -13,6 +13,7 @@ target_sources(app PRIVATE
 	src/main.c
 	src/usb_uart.c
 	src/bt_central_ht.c
+	src/addons/gpio_shell.c
 )
 # NORDIC SDK APP END
 

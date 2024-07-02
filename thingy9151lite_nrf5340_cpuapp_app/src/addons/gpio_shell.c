@@ -1,0 +1,70 @@
+/*
+ * GPIO shell commands
+ *
+ * Copyright (c) 2024 Emcraft Systems
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ */
+
+#include <ctype.h>
+#include <zephyr/drivers/sensor.h>
+#include <zephyr/shell/shell.h>
+
+#include <zephyr/drivers/gpio.h>
+
+#define PIN_NUM_MAX 16
+
+struct gpio_nrfx_data {
+  /* gpio_driver_data needs to be first */
+  struct gpio_driver_data common;
+  sys_slist_t callbacks;
+  uint32_t counters[PIN_NUM_MAX];
+};
+
+static int cmd_gpio_interrupt(const struct shell *sh, size_t argc,
+                              char **argv) {
+  int pin, block;
+  char *blockstr, *pinstr, *argvstr;
+
+  static const struct device *gpio0 =
+      DEVICE_DT_GET_OR_NULL(DT_NODELABEL(gpio0));
+  static const struct device *gpio1 =
+      DEVICE_DT_GET_OR_NULL(DT_NODELABEL(gpio1));
+  const struct device *gpio_dev;
+
+  struct gpio_nrfx_data *gpio_data = NULL;
+
+  if (argc > 1) {
+    argvstr = strdup(argv[1]);
+    blockstr = strtok(argvstr, ".");
+    block = strtol(blockstr, NULL, 10);
+
+    gpio_dev = (block == 0) ? gpio0 : gpio1;
+    gpio_data = (gpio_dev == NULL) ? NULL : gpio_dev->data;
+
+    if (gpio_data != NULL) {
+      pinstr = strtok(NULL, ".");
+      pin = strtol(pinstr, NULL, 10);
+      shell_print(sh, "P%u.%u: %u", block, pin, gpio_data->counters[pin]);
+    }
+
+    return 0;
+  }
+
+  for (block = 0; block <= 1; block++) {
+    for (pin = 0; pin < PIN_NUM_MAX; pin++) {
+      gpio_dev = (block == 0) ? gpio0 : gpio1;
+      gpio_data = (gpio_dev == NULL) ? NULL : gpio_dev->data;
+
+      if (gpio_data != NULL) {
+        shell_print(sh, "P%u.%u: %u", block, pin, gpio_data->counters[pin]);
+      }
+    }
+  }
+
+  return 0;
+}
+
+SHELL_CMD_REGISTER(gpio_interrupt, NULL, "List GPIO interrupts counters",
+                   cmd_gpio_interrupt);
