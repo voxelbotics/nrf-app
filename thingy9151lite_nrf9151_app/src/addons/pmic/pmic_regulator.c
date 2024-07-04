@@ -5,7 +5,7 @@
  */
 
 #include <stdlib.h>
-
+#include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/regulator.h>
 #include <zephyr/dt-bindings/regulator/npm1300.h>

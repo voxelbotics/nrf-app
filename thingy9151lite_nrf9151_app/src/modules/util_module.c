@@ -234,7 +234,6 @@ static int setup(void)
 
 	if (err) {
 		LOG_DBG("pmic_regulator_init, error: %d", err);
-		send_reboot_request(REASON_GENERIC);
 	}
 #endif
 
@@ -243,7 +242,6 @@ static int setup(void)
 
 	if (err) {
 		LOG_DBG("watchdog_init_and_start, error: %d", err);
-		send_reboot_request(REASON_GENERIC);
 	}
 #endif
 
