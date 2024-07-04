@@ -13,8 +13,10 @@ target_sources(app PRIVATE
 	src/main.c
 	src/usb_uart.c
 	src/bt_central_ht.c
-	src/addons/gpio_shell.c
 )
+
+add_subdirectory(src/addons)
+
 # NORDIC SDK APP END
 
 # Include source directory
