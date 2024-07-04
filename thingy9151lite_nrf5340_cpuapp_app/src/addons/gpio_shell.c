@@ -14,6 +14,7 @@
 #include <zephyr/drivers/gpio.h>
 
 #define PIN_NUM_MAX 16
+#define ARG_MAX_LEN 16
 
 struct gpio_nrfx_data {
   /* gpio_driver_data needs to be first */
@@ -25,7 +26,8 @@ struct gpio_nrfx_data {
 static int cmd_gpio_interrupt(const struct shell *sh, size_t argc,
                               char **argv) {
   int pin, block;
-  char *blockstr, *pinstr, *argvstr;
+  char *blockstr, *pinstr;
+  char argvstr[ARG_MAX_LEN];
 
   static const struct device *gpio0 =
       DEVICE_DT_GET_OR_NULL(DT_NODELABEL(gpio0));
@@ -36,7 +38,7 @@ static int cmd_gpio_interrupt(const struct shell *sh, size_t argc,
   struct gpio_nrfx_data *gpio_data = NULL;
 
   if (argc > 1) {
-    argvstr = strdup(argv[1]);
+    strncpy(argvstr, argv[1], ARG_MAX_LEN);
     blockstr = strtok(argvstr, ".");
     block = strtol(blockstr, NULL, 10);
 
@@ -72,7 +74,8 @@ static int cmd_gpio_interrupt(const struct shell *sh, size_t argc,
 
 static int cmd_trigger_irq(const struct shell *sh, size_t argc, char **argv) {
   int ret;
-  static const struct device *gpio = DEVICE_DT_GET_OR_NULL(DT_NODELABEL(GPIO_BLOCK_NAME));
+  static const struct device *gpio =
+      DEVICE_DT_GET_OR_NULL(DT_NODELABEL(GPIO_BLOCK_NAME));
 
   struct gpio_dt_spec spec = {
       .port = gpio,
