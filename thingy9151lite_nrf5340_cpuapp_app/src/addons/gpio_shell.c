@@ -66,5 +66,40 @@ static int cmd_gpio_interrupt(const struct shell *sh, size_t argc,
   return 0;
 }
 
+#define GPIO_BLOCK 0
+#define GPIO_BLOCK_NAME gpio0
+#define GPIO_PIN 31
+
+static int cmd_trigger_irq(const struct shell *sh, size_t argc, char **argv) {
+  int ret;
+  static const struct device *gpio = DEVICE_DT_GET_OR_NULL(DT_NODELABEL(GPIO_BLOCK_NAME));
+
+  struct gpio_dt_spec spec = {
+      .port = gpio,
+      .pin = GPIO_PIN,
+  };
+
+  if (!device_is_ready(gpio)) {
+    shell_print(sh, "Error: device %s is not ready", gpio->name);
+    return 0;
+  }
+
+  ret = gpio_pin_configure_dt(&spec, GPIO_OUTPUT);
+  if (ret != 0) {
+    shell_print(sh, "Error %d: failed to configure P%u.%u", ret, GPIO_BLOCK,
+                spec.pin);
+    return 0;
+  }
+
+  shell_print(sh, "GPIO send: P%u.%u", GPIO_BLOCK, GPIO_PIN);
+  gpio_pin_set(spec.port, spec.pin, 0);
+  k_msleep(100);
+  gpio_pin_set(spec.port, spec.pin, 1);
+
+  return 0;
+}
+
 SHELL_CMD_REGISTER(gpio_interrupt, NULL, "List GPIO interrupts counters",
                    cmd_gpio_interrupt);
+
+SHELL_CMD_REGISTER(trigger_irq, NULL, "Trigger Inter-MCU IRQ", cmd_trigger_irq);
