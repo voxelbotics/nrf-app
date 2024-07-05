@@ -1,0 +1,14 @@
+#
+# Copyright (c) 2024 Emcraft Systems
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menuconfig PMIC_CHARGER
+	bool "Enable PMIC charger module"
+	select SENSOR
+	default y
+
+module = CHARGER
+module-str = charger
+source "subsys/logging/Kconfig.template.log_config"

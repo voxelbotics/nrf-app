@@ -12,8 +12,6 @@
 #ifndef PMIC_REGULATOR_H__
 #define PMIC_REGULATOR_H__
 
-#include <zephyr/kernel.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
