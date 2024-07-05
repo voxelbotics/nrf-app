@@ -116,7 +116,8 @@ int pmic_charger_clear_error(void)
 	k_mutex_lock(&mutex, K_FOREVER);
 
 	val.val1 = 1;
-	err = sensor_attr_set(charger, SENSOR_CHAN_GAUGE_DESIRED_CHARGING_CURRENT, SENSOR_ATTR_CONFIGURATION, &val);
+	err = sensor_attr_set(charger, SENSOR_CHAN_GAUGE_DESIRED_CHARGING_CURRENT,
+				SENSOR_ATTR_CONFIGURATION, &val);
 	if (err) {
 		LOG_ERR("Cannot clear charging error. Error code: %d", err);
 	}
@@ -132,7 +133,8 @@ bool pmic_charger_is_enabled(void)
 	struct sensor_value val;
 	k_mutex_lock(&mutex, K_FOREVER);
 
-	err = sensor_attr_get(charger, SENSOR_CHAN_GAUGE_DESIRED_CHARGING_CURRENT, SENSOR_ATTR_CONFIGURATION, &val);
+	err = sensor_attr_get(charger, SENSOR_CHAN_GAUGE_DESIRED_CHARGING_CURRENT,
+				SENSOR_ATTR_CONFIGURATION, &val);
 	if (ret) {
 		LOG_ERR("Cannot get charging status. Error code: %d", err);
 	} else {
@@ -153,7 +155,8 @@ static int pmic_charger_status_cmd(const struct shell *sh, size_t argc, char **a
 		LOG_ERR("Cannot update charger status. Error code: %d", err);
 		return 0;
 	}
-	shell_print(sh, "\tBattery charging: %s", pmic_charger_is_enabled() ? "enabled" : "disabled");
+	shell_print(sh, "\tBattery charging: %s",
+			pmic_charger_is_enabled() ? "enabled" : "disabled");
 	shell_print(sh, "\tBattery voltage: %.2f V", pmic_charger_get_voltage());
 	shell_print(sh, "\tBattery current: %.2f mA", pmic_charger_get_current() * 1000);
 	shell_print(sh, "\tBattery temp: %.2f", pmic_charger_get_temp());
