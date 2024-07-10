@@ -576,6 +576,22 @@ int main(void)
 		location_ctrl_init();
 	}
 
+#ifdef CONFIG_NET_CONFIG_SETTINGS
+	/* Without this, DHCPv4 starts on first interface and if that is not Wi-Fi or
+	 * only supports IPv6, then its an issue. (E.g., OpenThread)
+	 *
+	 * So, we start DHCPv4 on Wi-Fi interface always, independent of the ordering.
+	 */
+	const struct device *dev = DEVICE_DT_GET_OR_NULL(DT_CHOSEN(zephyr_wifi));
+
+	if (dev) {
+		struct net_if *wifi_iface = net_if_lookup_by_dev(dev);
+
+		/* As both are Ethernet, we need to set specific interface*/
+		net_if_set_default(wifi_iface);
+	}
+#endif
+
 	while (true) {
 		module_get_next_msg(&self, &msg);
 
