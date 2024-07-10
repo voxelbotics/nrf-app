@@ -17,51 +17,41 @@
 		zephyr,ppp-uart = &uart1;
 	};
 
-	leds0 {
-		compatible = "gpio-leds";
+	pwmleds0 {
+		compatible = "pwm-leds";
 		status = "okay";
 		label = "LED0";
-		led0: led_0 {
-			status = "okay";
-			gpios = <&gpio0 0 0>;
-			label = "Green LED 1";
+		pwm_led0: led_pwm_0 {
+			pwms = <&pwm0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
 		};
 	};
 
-	leds1 {
-		compatible = "gpio-leds";
+	pwmleds1 {
+		compatible = "pwm-leds";
 		status = "okay";
 		label = "LED1";
-		led1: led_1 {
-			gpios = <&gpio0 1 0>;
-			label = "Green LED 2";
+		pwm_led1: led_pwm_1 {
+			pwms = <&pwm1 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
 		};
 	};
 
-	leds2 {
-		compatible = "gpio-leds";
+	pwmleds2 {
+		compatible = "pwm-leds";
 		status = "okay";
 		label = "LED2";
-		led2: led_2 {
-			gpios = <&gpio0 4 0>;
-			label = "Green LED 3";
+		pwm_led2: led_pwm_2 {
+			status = "okay";
+			pwms = <&pwm2 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
 		};
 	};
 
-	leds3 {
-		compatible = "gpio-leds";
+	pwmleds3 {
+		compatible = "pwm-leds";
 		status = "okay";
 		label = "LED3";
-		led3: led_3 {
-			gpios = <&gpio0 5 0>;
-			label = "Green LED 4";
-		};
-	};
-
-	pwmleds {
-		compatible = "pwm-leds";
-		pwm_led0: pwm_led_0 {
-			pwms = <&pwm0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+		pwm_led3: led_pwm_3 {
+			status = "okay";
+			pwms = <&pwm3 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
 		};
 	};
 
@@ -137,18 +127,17 @@
 
 	/* These aliases are provided for compatibility with samples */
 	aliases {
-		led0 = &led0;
-		led1 = &led1;
-		led2 = &led2;
-		led3 = &led3;
-		pwm-led0 = &pwm_led0;
+		led0 = &pwm_led0;
+		led1 = &pwm_led1;
+		led2 = &pwm_led2;
+		led3 = &pwm_led3;
 		sw0 = &button0;
 		sw1 = &button1;
 		sw2 = &button2;
 		sw3 = &button3;
-		bootloader-led0 = &led0;
+		bootloader-led0 = &pwm_led0;
 		mcuboot-button0 = &button0;
-		mcuboot-led0 = &led0;
+		mcuboot-led0 = &pwm_led0;
 		watchdog0 = &wdt0;
 		spi-flash0 = &gd25wb256;
 	};
@@ -205,6 +194,27 @@ arduino_i2c: &i2c2 {
 	status = "okay";
 	pinctrl-0 = <&pwm0_default>;
 	pinctrl-1 = <&pwm0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&pwm1 {
+	status = "okay";
+	pinctrl-0 = <&pwm1_default>;
+	pinctrl-1 = <&pwm1_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&pwm2 {
+	status = "okay";
+	pinctrl-0 = <&pwm2_default>;
+	pinctrl-1 = <&pwm2_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&pwm3 {
+	status = "okay";
+	pinctrl-0 = <&pwm3_default>;
+	pinctrl-1 = <&pwm3_sleep>;
 	pinctrl-names = "default", "sleep";
 };
 
