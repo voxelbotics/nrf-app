@@ -28,6 +28,7 @@
 #include "addons/lps22hb_trig.h"
 #include "addons/lps22hh_trig.h"
 #include "config.h"
+#include "location/location_shell.h"
 
 #include <zephyr/logging/log.h>
 #include <zephyr/logging/log_ctrl.h>
@@ -569,6 +570,10 @@ int main(void)
 	if (err) {
 		LOG_ERR("Failed starting module, error: %d", err);
 		SEND_ERROR(app, APP_EVT_ERROR, err);
+	}
+
+	if (!IS_ENABLED(CONFIG_LOCATION_MODULE)) {
+		location_ctrl_init();
 	}
 
 	while (true) {
