@@ -4,7 +4,14 @@
  * SPDX-License-Identifier: LicenseRef-Nordic-5-Clause
  */
 
+#include <dt-bindings/regulator/npm1300.h>
+
 /	{
+
+	chosen {
+		zephyr,ppp-uart = &uart1;
+	};
+
 	/delete-node/ leds;
 
 	leds0 {
@@ -51,13 +58,124 @@
 	/* Configure partition manager to use gd25wb256 as the external flash */
 	chosen {
 		nordic,pm-ext-flash = &gd25wb256;
+		zephyr,wifi = &nordic_wlan0;
 	};
 
 	aliases {
 		ext-flash = &gd25wb256;
 	};
+
+	nordic_wlan0: nordic_wlan0 {
+		compatible = "nordic,wlan0";
+		status = "okay";
+	};
+
+	nrf70_tx_power_ceiling: nrf70_tx_power_ceiling_node {
+		status = "okay";
+		compatible = "nordic,nrf700x-tx-power-ceiling";
+		max-pwr-2g-dsss = <0x54>;
+		max-pwr-2g-mcs0 = <0x40>;
+		max-pwr-2g-mcs7 = <0x40>;
+		max-pwr-5g-low-mcs0 = <0x34>;
+		max-pwr-5g-low-mcs7 = <0x34>;
+		max-pwr-5g-mid-mcs0 = <0x34>;
+		max-pwr-5g-mid-mcs7 = <0x34>;
+		max-pwr-5g-high-mcs0 = <0x30>;
+		max-pwr-5g-high-mcs7 = <0x30>;
+	};
+
 };
 
 &gd25wb256 {
 	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+#if 0 /* TBD - the app hangs with hw-flow-control enabled */
+	hw-flow-control;
+#endif
+};
+
+&arduino_i2c {
+	lis2dw12: lis2dw12@19 {
+		compatible = "st,lis2dw12";
+		reg = <0x19>;
+		int-pin = <1>;
+		irq-gpios =  <&gpio0 7 GPIO_ACTIVE_HIGH>, <&gpio0 4 GPIO_ACTIVE_HIGH>;
+		tap-threshold = <1>, <1>, <1>;
+	};
+
+	lps22hh: lps22hh@5d {
+		compatible = "st,lps22hh";
+		reg = <0x5d>;
+		drdy-gpios = <&arduino_header 15 GPIO_ACTIVE_HIGH>;
+	};
+
+	lps22hb: lps22hb-press@5c {
+		compatible = "st,lps22hb-press";
+		reg = <0x5c>;
+		drdy-gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
+	};
+
+	npm1300_pmic: pmic@6b {
+		compatible = "nordic,npm1300";
+		reg = <0x6b>;
+		status = "okay";
+
+		npm1300_wdt: npm1300_wdt {
+			compatible = "nordic,npm1300-wdt";
+		};
+
+		npm1300_regulators: regulators {
+			compatible = "nordic,npm1300-regulator";
+
+			/* limits are set to min/max allowed values */
+			npm1300_buck1: BUCK1 {
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+			};
+
+			npm1300_ldsw1: LDO1 {
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+				regulator-initial-mode = <NPM1300_LDSW_MODE_LDSW>;
+				regulator-allowed-modes = <NPM1300_LDSW_MODE_LDSW>;
+			};
+
+			npm1300_ldsw2: LDO2 {
+				regulator-min-microvolt = <3000000>;
+				regulator-max-microvolt = <3000000>;
+				regulator-initial-mode = <NPM1300_LDSW_MODE_LDSW>;
+				regulator-allowed-modes = <NPM1300_LDSW_MODE_LDSW>;
+			};
+		};
+
+		npm1300_charger: charger {
+			compatible = "nordic,npm1300-charger";
+			term-microvolt = <4150000>;
+			term-warm-microvolt = <4150000>;
+			current-microamp = <800000>;
+			dischg-limit-microamp = <1340000>;
+			vbus-limit-microamp = <1200000>;
+			thermistor-ohms = <10000>;
+			thermistor-beta = <3380>;
+			charging-enable;
+		};
+	};
+};
+
+&arduino_spi {
+	status = "okay";
+
+	nrf700x: nrf7002@0 {
+		compatible = "nordic,nrf700x-spi";
+		status = "okay";
+		reg = <0>;
+		spi-max-frequency = <DT_FREQ_M(8)>;
+
+		iovdd-ctrl-gpios = <&arduino_header 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;    /* D0 */
+		bucken-gpios = <&arduino_header 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;        /* D1 */
+		host-irq-gpios = <&arduino_header 13 GPIO_ACTIVE_HIGH>;     /* D7 */
+	};
 };
