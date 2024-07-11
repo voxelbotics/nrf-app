@@ -117,6 +117,8 @@
 		compatible = "nordic,npm1300";
 		reg = <0x6b>;
 		status = "okay";
+		host-int-gpios = <&gpio0 6 0>;
+		pmic-int-pin = <3>;
 
 		npm1300_wdt: npm1300_wdt {
 			compatible = "nordic,npm1300-wdt";

@@ -14,6 +14,9 @@
 #if defined(CONFIG_PMIC_REGULATOR)
 #include "pmic_regulator.h"
 #endif
+#if defined(CONFIG_PMIC_IRQ)
+#include "pmic_irq.h"
+#endif
 
 #include "watchdog_app.h"
 
@@ -72,6 +75,13 @@ void watchdog_stop_feed(int reason_id, void *user_data)
 		LOG_ERR("Watchdog disabled, stopping feed has no effect");
 		return;
 	}
+
+#if defined(CONFIG_PMIC_IRQ)
+	int err = pmic_irq_disable();
+	if (err) {
+		LOG_ERR("Cannot disable PMIC interrupts");
+	}
+#endif
 
 #if defined(CONFIG_PMIC_REGULATOR)
 	pmic_regulator_deinit();

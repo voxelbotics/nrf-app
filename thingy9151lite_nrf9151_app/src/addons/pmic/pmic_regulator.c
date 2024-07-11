@@ -111,7 +111,7 @@ int pmic_regulator_enable(pmic_regulator_id_t regulator_id)
 
 	if (!device_is_ready(reg)) {
 		LOG_ERR("Regulator %s device is not ready.", name);
-		err = -EIO;
+		err = -ENODEV;
 		goto exit;
 	}
 
@@ -178,6 +178,7 @@ void pmic_regulator_deinit(void)
 {
 	if (!device_is_ready(pmic_regulators_parent)) {
 		LOG_ERR("Parent regulators device not ready.");
+		return;
 	}
 
 	if (pmic_regulator_is_enabled(PMIC_REGULATOR_LDSW1)) {
@@ -196,7 +197,7 @@ int pmic_regulator_init(void)
 	int err = 0;
 	if (!device_is_ready(pmic_regulators_parent)) {
 		LOG_ERR("Parent regulators device not ready.");
-		return -EBUSY;
+		return -ENODEV;
 	}
 
 	pmic_regulator_deinit();
