@@ -12,6 +12,9 @@
 
 #define MODULE util_module
 
+#if defined(CONFIG_PMIC_IRQ)
+#include "pmic_irq.h"
+#endif
 #if defined(CONFIG_PMIC_REGULATOR)
 #include "pmic_regulator.h"
 #endif
@@ -231,7 +234,6 @@ static int setup(void)
 
 #if defined(CONFIG_PMIC_REGULATOR)
 	err = pmic_regulator_init();
-
 	if (err) {
 		LOG_DBG("pmic_regulator_init, error: %d", err);
 	}
@@ -239,9 +241,15 @@ static int setup(void)
 
 #if defined(CONFIG_WATCHDOG_APPLICATION)
 	err = watchdog_init_and_start();
-
 	if (err) {
 		LOG_DBG("watchdog_init_and_start, error: %d", err);
+	}
+#endif
+
+#if defined(CONFIG_PMIC_IRQ)
+	err = pmic_irq_enable();
+	if (err) {
+		LOG_DBG("pmic_irq_init, error: %d", err);
 	}
 #endif
 

@@ -31,6 +31,7 @@ int pmic_charger_update(void)
 
 	if (!device_is_ready(charger)) {
 		LOG_ERR("Charger device is not ready");
+		err = -ENODEV;
 		goto exit;
 	}
 

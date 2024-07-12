@@ -1,0 +1,24 @@
+#
+# Copyright (c) 2024 Emcraft Systems
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menuconfig PMIC
+	bool "Enable PMIC module"
+	default y
+
+if PMIC
+
+config PMIC_IRQ
+	bool "Enable PMIC interrupts"
+	default y
+
+rsource "Kconfig.pmic_regulator"
+rsource "Kconfig.pmic_charger"
+
+endif # PMIC
+
+module = PMIC
+module-str = pmic
+source "subsys/logging/Kconfig.template.log_config"
