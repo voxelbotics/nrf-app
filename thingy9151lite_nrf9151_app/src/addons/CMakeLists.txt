@@ -14,4 +14,6 @@ target_sources(app PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}/lps22hh_trig.c
 	${CMAKE_CURRENT_SOURCE_DIR}/lps22hh_shell.c
 )
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/pmic)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vcom)

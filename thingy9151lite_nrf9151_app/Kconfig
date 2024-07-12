@@ -42,6 +42,7 @@ rsource "src/modules/Kconfig.led_module"
 rsource "src/modules/Kconfig.debug_module"
 rsource "src/addons/pmic/Kconfig.pmic_regulator"
 rsource "src/addons/pmic/Kconfig.pmic_charger"
+rsource "src/addons/Kconfig"
 
 rsource "src/cloud/cloud_codec/Kconfig"
 rsource "src/watchdog/Kconfig"

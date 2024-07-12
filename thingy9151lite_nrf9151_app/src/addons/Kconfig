@@ -1,0 +1,13 @@
+#
+# Copyright (c) 2024 Emcraft Systems
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+config VCOM_TESTS
+	bool "VCOM interface tests"
+	default y
+
+module = ADDONS
+module-str = Addons integration layer
+source "subsys/logging/Kconfig.template.log_config"
