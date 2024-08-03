@@ -10,6 +10,14 @@ menuconfig PMIC
 
 if PMIC
 
+config PMIC_INIT_PRIORITY
+	int "PMIC init priority"
+	default 90
+	help
+		The Thingy-9151-Lite board contains an nPM1300 PMIC that needs to be configured to
+		set up the power domains on the board correctly. This happens during sys_init,
+		and the PMIC setup must happen before external devices are initialized in order.
+
 config PMIC_IRQ
 	bool "Enable PMIC interrupts"
 	default y
